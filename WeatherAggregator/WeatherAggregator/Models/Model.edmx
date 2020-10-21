@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PFAssessmentModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="averages">
+          <Key>
+            <PropertyRef Name="averages_id" />
+          </Key>
+          <Property Name="averages_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="region_id" Type="int" />
+          <Property Name="temperature" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="pressure" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="humidity" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="wind_speed" Type="decimal" Precision="6" Scale="2" />
+        </EntityType>
+        <EntityType Name="loc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="72" Nullable="false" />
+          <Property Name="state" Type="varchar" MaxLength="2" />
+          <Property Name="country" Type="varchar" MaxLength="2" />
+          <Property Name="coordlon" Type="numeric" Precision="11" Scale="6" Nullable="false" />
+          <Property Name="coordlat" Type="numeric" Precision="11" Scale="6" Nullable="false" />
+        </EntityType>
+        <EntityType Name="location">
+          <Key>
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="location_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="region_id" Type="int" />
+          <Property Name="description" Type="varchar" MaxLength="100" />
+          <Property Name="lat" Type="numeric" Precision="11" Scale="6" />
+          <Property Name="lng" Type="numeric" Precision="11" Scale="6" />
+        </EntityType>
+        <EntityType Name="raw">
+          <Key>
+            <PropertyRef Name="raw_id" />
+          </Key>
+          <Property Name="raw_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="location_id" Type="int" />
+          <Property Name="collection_date" Type="date" />
+          <Property Name="temperature" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="pressure" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="humidity" Type="decimal" Precision="6" Scale="2" />
+          <Property Name="wind_speed" Type="decimal" Precision="6" Scale="2" />
+        </EntityType>
+        <EntityType Name="region">
+          <Key>
+            <PropertyRef Name="region_id" />
+          </Key>
+          <Property Name="region_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <Association Name="FK_averages_region">
+          <End Role="region" Type="Self.region" Multiplicity="0..1" />
+          <End Role="averages" Type="Self.averages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="region">
+              <PropertyRef Name="region_id" />
+            </Principal>
+            <Dependent Role="averages">
+              <PropertyRef Name="region_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_location_region">
+          <End Role="region" Type="Self.region" Multiplicity="0..1" />
+          <End Role="location" Type="Self.location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="region">
+              <PropertyRef Name="region_id" />
+            </Principal>
+            <Dependent Role="location">
+              <PropertyRef Name="region_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_raw_location">
+          <End Role="location" Type="Self.location" Multiplicity="0..1" />
+          <End Role="raw" Type="Self.raw" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="location">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="raw">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PFAssessmentModelStoreContainer">
+          <EntitySet Name="averages" EntityType="Self.averages" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="loc" EntityType="Self.loc" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="location" EntityType="Self.location" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="raw" EntityType="Self.raw" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="region" EntityType="Self.region" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_averages_region" Association="Self.FK_averages_region">
+            <End Role="region" EntitySet="region" />
+            <End Role="averages" EntitySet="averages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_location_region" Association="Self.FK_location_region">
+            <End Role="region" EntitySet="region" />
+            <End Role="location" EntitySet="location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_raw_location" Association="Self.FK_raw_location">
+            <End Role="location" EntitySet="location" />
+            <End Role="raw" EntitySet="raw" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PFAssessmentModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="PFAssessmentEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="averages" EntityType="PFAssessmentModel.averages" />
+          <EntitySet Name="loc" EntityType="PFAssessmentModel.loc" />
+          <EntitySet Name="location" EntityType="PFAssessmentModel.location" />
+          <EntitySet Name="raw" EntityType="PFAssessmentModel.raw" />
+          <EntitySet Name="region" EntityType="PFAssessmentModel.region" />
+          <AssociationSet Name="FK_averages_region" Association="PFAssessmentModel.FK_averages_region">
+            <End Role="region" EntitySet="region" />
+            <End Role="averages" EntitySet="averages" />
+          </AssociationSet>
+          <AssociationSet Name="FK_location_region" Association="PFAssessmentModel.FK_location_region">
+            <End Role="region" EntitySet="region" />
+            <End Role="location" EntitySet="location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_raw_location" Association="PFAssessmentModel.FK_raw_location">
+            <End Role="location" EntitySet="location" />
+            <End Role="raw" EntitySet="raw" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="averages">
+          <Key>
+            <PropertyRef Name="averages_id" />
+          </Key>
+          <Property Name="averages_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="region_id" Type="Int32" />
+          <Property Name="temperature" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="pressure" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="humidity" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="wind_speed" Type="Decimal" Precision="6" Scale="2" />
+          <NavigationProperty Name="region" Relationship="PFAssessmentModel.FK_averages_region" FromRole="averages" ToRole="region" />
+        </EntityType>
+        <EntityType Name="loc">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="72" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="country" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="coordlon" Type="Decimal" Nullable="false" Precision="11" Scale="6" />
+          <Property Name="coordlat" Type="Decimal" Nullable="false" Precision="11" Scale="6" />
+        </EntityType>
+        <EntityType Name="location">
+          <Key>
+            <PropertyRef Name="location_id" />
+          </Key>
+          <Property Name="location_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="region_id" Type="Int32" />
+          <Property Name="description" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="lat" Type="Decimal" Precision="11" Scale="6" />
+          <Property Name="lng" Type="Decimal" Precision="11" Scale="6" />
+          <NavigationProperty Name="region" Relationship="PFAssessmentModel.FK_location_region" FromRole="location" ToRole="region" />
+          <NavigationProperty Name="raw" Relationship="PFAssessmentModel.FK_raw_location" FromRole="location" ToRole="raw" />
+        </EntityType>
+        <EntityType Name="raw">
+          <Key>
+            <PropertyRef Name="raw_id" />
+          </Key>
+          <Property Name="raw_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="location_id" Type="Int32" />
+          <Property Name="collection_date" Type="DateTime" Precision="0" />
+          <Property Name="temperature" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="pressure" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="humidity" Type="Decimal" Precision="6" Scale="2" />
+          <Property Name="wind_speed" Type="Decimal" Precision="6" Scale="2" />
+          <NavigationProperty Name="location" Relationship="PFAssessmentModel.FK_raw_location" FromRole="raw" ToRole="location" />
+        </EntityType>
+        <EntityType Name="region">
+          <Key>
+            <PropertyRef Name="region_id" />
+          </Key>
+          <Property Name="region_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="averages" Relationship="PFAssessmentModel.FK_averages_region" FromRole="region" ToRole="averages" />
+          <NavigationProperty Name="location" Relationship="PFAssessmentModel.FK_location_region" FromRole="region" ToRole="location" />
+        </EntityType>
+        <Association Name="FK_averages_region">
+          <End Type="PFAssessmentModel.region" Role="region" Multiplicity="0..1" />
+          <End Type="PFAssessmentModel.averages" Role="averages" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="region">
+              <PropertyRef Name="region_id" />
+            </Principal>
+            <Dependent Role="averages">
+              <PropertyRef Name="region_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_location_region">
+          <End Type="PFAssessmentModel.region" Role="region" Multiplicity="0..1" />
+          <End Type="PFAssessmentModel.location" Role="location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="region">
+              <PropertyRef Name="region_id" />
+            </Principal>
+            <Dependent Role="location">
+              <PropertyRef Name="region_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_raw_location">
+          <End Type="PFAssessmentModel.location" Role="location" Multiplicity="0..1" />
+          <End Type="PFAssessmentModel.raw" Role="raw" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="location">
+              <PropertyRef Name="location_id" />
+            </Principal>
+            <Dependent Role="raw">
+              <PropertyRef Name="location_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PFAssessmentModelStoreContainer" CdmEntityContainer="PFAssessmentEntities">
+          <EntitySetMapping Name="averages">
+            <EntityTypeMapping TypeName="PFAssessmentModel.averages">
+              <MappingFragment StoreEntitySet="averages">
+                <ScalarProperty Name="wind_speed" ColumnName="wind_speed" />
+                <ScalarProperty Name="humidity" ColumnName="humidity" />
+                <ScalarProperty Name="pressure" ColumnName="pressure" />
+                <ScalarProperty Name="temperature" ColumnName="temperature" />
+                <ScalarProperty Name="region_id" ColumnName="region_id" />
+                <ScalarProperty Name="averages_id" ColumnName="averages_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="loc">
+            <EntityTypeMapping TypeName="PFAssessmentModel.loc">
+              <MappingFragment StoreEntitySet="loc">
+                <ScalarProperty Name="coordlat" ColumnName="coordlat" />
+                <ScalarProperty Name="coordlon" ColumnName="coordlon" />
+                <ScalarProperty Name="country" ColumnName="country" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="location">
+            <EntityTypeMapping TypeName="PFAssessmentModel.location">
+              <MappingFragment StoreEntitySet="location">
+                <ScalarProperty Name="lng" ColumnName="lng" />
+                <ScalarProperty Name="lat" ColumnName="lat" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="region_id" ColumnName="region_id" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="raw">
+            <EntityTypeMapping TypeName="PFAssessmentModel.raw">
+              <MappingFragment StoreEntitySet="raw">
+                <ScalarProperty Name="wind_speed" ColumnName="wind_speed" />
+                <ScalarProperty Name="humidity" ColumnName="humidity" />
+                <ScalarProperty Name="pressure" ColumnName="pressure" />
+                <ScalarProperty Name="temperature" ColumnName="temperature" />
+                <ScalarProperty Name="collection_date" ColumnName="collection_date" />
+                <ScalarProperty Name="location_id" ColumnName="location_id" />
+                <ScalarProperty Name="raw_id" ColumnName="raw_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="region">
+            <EntityTypeMapping TypeName="PFAssessmentModel.region">
+              <MappingFragment StoreEntitySet="region">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="region_id" ColumnName="region_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

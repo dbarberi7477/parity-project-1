@@ -1,0 +1,73 @@
+﻿@model List<WeatherAggregator.ViewModels.WeatherDisplay>
+
+<script type="text/javascript">
+	// Define AJAX call to acquire new weather data for selection region
+	function UpdateData(_region_id) {
+		$.ajax({
+			url: '@Url.Content("~/Weather/UpdateData")',
+			type: 'POST',
+			data: { region_id: _region_id },
+			cache: false,
+			success: function (results) {
+				location.reload();
+			},
+			error: function (xhr, status, error) {
+				select(error);
+			}
+		});
+	}
+</script>
+
+<div>
+	<input type="button" id="btnUpdateData" name="btnUpdateData" value="Update Data" onclick="UpdateData($('#drpRegions').val());" />
+	<select id="drpRegions" name="drpRegions">
+		<option value="1">Southeastern PA</option>
+		<option value="4">Washington</option>
+	</select>
+
+	<div class="table-responsive rounded table-list-max-height" style="margin-top:10px;">
+		<table class="table table-bordered table-sm table-striped table-hover">
+			<thead class="thead-dark text-nowrap">
+				<tr class="header-sort filters">
+					<th>
+						@Html.DisplayNameFor(m => m.First().region).ToString()
+					</th>
+					<th>
+						@Html.DisplayNameFor(m => m.First().temperature).ToString()
+					</th>
+					<th>
+						@Html.DisplayNameFor(m => m.First().pressure).ToString()
+					</th>
+					<th>
+						@Html.DisplayNameFor(m => m.First().humidity).ToString()
+					</th>
+					<th>
+						@Html.DisplayNameFor(m => m.First().wind_speed).ToString()
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for (int i = 0; i < Model.Count; i++)
+				{
+					<tr>
+						<td>
+							@Model[i].region
+						</td>
+						<td>
+							@Model[i].temperature
+						</td>
+						<td>
+							@Model[i].pressure
+						</td>
+						<td>
+							@Model[i].humidity
+						</td>
+						<td>
+							@Model[i].wind_speed
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
